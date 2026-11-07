@@ -1,43 +1,48 @@
+// ==========================================
+// COMMIT 2: CONSUMO DE API DE TERCEROS (LIGERA Y DIRECTA)
+// ==========================================
+
 async function cargarJuegosExternos() {
     const contenedor = document.getElementById('api-terceros-container');
     if (!contenedor) return;
     
-    // Indicador visual de carga (Spinner)
+    // Indicador visual de carga
     contenedor.innerHTML = `
-        <div class="col-span-full text-center text-indigo-400 py-10 animate-pulse">
-            <i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i>
-            <p class="text-xs font-mono">Conectando con la API externa de FreeToGame...</p>
+        <div class="col-span-full text-center text-indigo-400 py-8 animate-pulse">
+            <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
+            <p class="text-xs font-mono">Consultando API pública de trivias de videojuegos...</p>
         </div>
     `;
 
     try {
-        // Petición HTTP GET mediante Fetch API usando un proxy CORS seguro para web
-        const respuesta = await fetch('https://corsproxy.io/?https://www.freetogame.com/api/games?sort=popularity');
+        // API pública directa sin CORS ni proxies (Open Trivia DB - Categoría Videojuegos)
+        const respuesta = await fetch('https://opentdb.com/api.php?amount=4&category=15&type=multiple');
         
         if (!respuesta.ok) throw new Error("Error en la respuesta del servidor");
         
         const datos = await respuesta.json();
-        
-        // Seleccionamos los primeros 6 juegos del catálogo devuelto
-        const juegos = datos.slice(0, 6);
-        
         contenedor.innerHTML = ''; // Limpiamos el contenedor
         
-        juegos.forEach(juego => {
+        datos.results.forEach((item, index) => {
+            // Decodificamos entidades HTML sencillas
+            const pregunta = item.question.replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&amp;/g, '&');
+            const respuestaCorrecta = item.correct_answer.replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+
             contenedor.innerHTML += `
-                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden card-hover shadow-lg flex flex-col justify-between">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 card-hover shadow-lg flex flex-col justify-between space-y-3">
                     <div>
-                        <img src="${juego.thumbnail}" alt="${juego.title}" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded font-mono">${juego.genre}</span>
-                            <h4 class="font-bold text-white text-base mt-2">${juego.title}</h4>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">${juego.short_description}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded font-mono">Dificultad: ${item.difficulty.toUpperCase()}</span>
+                            <span class="text-[10px] text-slate-500 font-mono">Pregunta #${index + 1}</span>
                         </div>
+                        <h4 class="font-bold text-white text-sm mt-2.5 leading-snug">${pregunta}</h4>
                     </div>
-                    <div class="p-4 pt-0">
-                        <a href="${juego.game_url}" target="_blank" class="block text-center bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-bold py-2 rounded-lg transition border border-indigo-500/40">
-                            Ver Detalles <i class="fa-solid fa-external-link-alt ml-1"></i>
-                        </a>
+                    <div class="pt-2 border-t border-slate-800/80">
+                        <span class="text-[11px] text-slate-400 block mb-1">Respuesta Correcta:</span>
+                        <div class="bg-slate-950 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-lg font-mono flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>${respuestaCorrecta}</span>
+                        </div>
                     </div>
                 </div>
             `;
