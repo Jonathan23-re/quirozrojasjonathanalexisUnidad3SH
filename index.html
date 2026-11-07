@@ -1,11 +1,300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>GameHub Nexus | Gestión & API Services</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .glow-indigo { filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.4)); }
+        .card-hover:hover { transform: translateY(-3px); transition: all 0.2s ease; }
+    </style>
 </head>
-<body>
-    
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navbar Principal estilo Gaming/Neon -->
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600/20 border border-indigo-500/40 rounded-xl text-indigo-400 glow-indigo">
+                    <i class="fa-solid fa-gamepad text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        GAMEHUB <span class="text-xs px-2 py-0.5 rounded bg-indigo-950 border border-indigo-700/50 text-indigo-300 font-mono">NEXUS</span>
+                    </h1>
+                    <p class="text-[10px] text-slate-400 tracking-widest uppercase">Plataforma Integrada DWI - U3</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <span class="text-xs bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Sesión: <strong id="lbl-sesion" class="text-indigo-400">Gamer_Guest</strong></span>
+                </span>
+                <!-- COMMIT 4: Botón que dispara la función de autenticación/seguridad -->
+                <button onclick="verificarAccesoAdmin()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition border border-indigo-400/30 shadow-lg shadow-indigo-600/20">
+                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Acceso Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navegación por Fases / Módulos -->
+    <nav class="bg-slate-900 border-b border-slate-800 sticky top-[65px] z-20">
+        <div class="max-w-7xl mx-auto px-4 flex space-x-6 overflow-x-auto">
+            <a href="#dashboard" class="py-3.5 px-3 text-indigo-400 border-b-2 border-indigo-500 font-semibold text-xs uppercase tracking-wider flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-square-poll-vertical"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#modulo-terceros" class="py-3.5 px-3 text-slate-400 hover:text-indigo-300 border-b-2 border-transparent font-medium text-xs uppercase tracking-wider flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-cloud"></i>
+                <span>Catálogo Público (Terceros)</span>
+            </a>
+            <a href="#modulo-crud" class="py-3.5 px-3 text-slate-400 hover:text-indigo-300 border-b-2 border-transparent font-medium text-xs uppercase tracking-wider flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-server"></i>
+                <span>API Juegos (Propio)</span>
+            </a>
+            <a href="#modulo-seguridad" class="py-3.5 px-3 text-slate-400 hover:text-indigo-300 border-b-2 border-transparent font-medium text-xs uppercase tracking-wider flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-shield-virus"></i>
+                <span>Seguridad & Sanitización</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-10">
+
+        <!-- Hero Banner Informativo -->
+        <section id="dashboard" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 p-6 sm:p-8 shadow-2xl">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-3xl space-y-3">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-mono">
+                    <i class="fa-solid fa-code"></i> Arquitectura Orientada a Servicios (SOA)
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    Gestión Integral de Videojuegos & Consumo de APIs REST
+                </h2>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Aplicación web desarrollada bajo la metodología ágil para la Unidad 3. Integra servicios RESTful propios para biblioteca de juegos, consumo de APIs públicas externas de catálogo y capas de seguridad para autenticación y sanitización de inputs[cite: 1, 2].
+                </p>
+            </div>
+        </section>
+
+        <!-- Tarjetas de Métricas / Módulos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl card-hover shadow-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Web Service Propio</span>
+                    <div class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg"><i class="fa-solid fa-database"></i></div>
+                </div>
+                <p class="text-lg font-bold text-white">Biblioteca CRUD</p>
+                <p class="text-xs text-slate-400 mt-1">Gestión interna de inventario de juegos.</p>
+                <div class="mt-3 flex items-center text-[11px] text-emerald-400 font-mono">
+                    <i class="fa-solid fa-check-double mr-1"></i> Commit 3 Integrado
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl card-hover shadow-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">API Extranjera</span>
+                    <div class="p-2 bg-purple-500/10 text-purple-400 rounded-lg"><i class="fa-solid fa-globe"></i></div>
+                </div>
+                <p class="text-lg font-bold text-white">Free-To-Play API</p>
+                <p class="text-xs text-slate-400 mt-1">Consulta en vivo de datos de terceros[cite: 2].</p>
+                <div class="mt-3 flex items-center text-[11px] text-emerald-400 font-mono">
+                    <i class="fa-solid fa-check-double mr-1"></i> Commit 2 Integrado
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl card-hover shadow-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mapeo Seguridad</span>
+                    <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-shield-halved"></i></div>
+                </div>
+                <p class="text-lg font-bold text-white">XSS & Auth Token</p>
+                <p class="text-xs text-slate-400 mt-1">Sanitización de entradas y rol de usuario.</p>
+                <div class="mt-3 flex items-center text-[11px] text-emerald-400 font-mono">
+                    <i class="fa-solid fa-check-double mr-1"></i> Commit 4 Integrado
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl card-hover shadow-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Control Git</span>
+                    <div class="p-2 bg-pink-500/10 text-pink-400 rounded-lg"><i class="fa-solid fa-code-commit"></i></div>
+                </div>
+                <p class="text-lg font-bold text-white">Proyecto Listo</p>
+                <p class="text-xs text-slate-400 mt-1">Estructura modular por archivos JS.</p>
+                <div class="mt-3 flex items-center text-[11px] text-pink-400 font-mono">
+                    <i class="fa-solid fa-tag mr-1"></i> v1.0 - Entrega Final
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMIT 2: SECCIÓN DE CATALOGO PUBLICO (API DE TERCEROS) -->
+        <section id="modulo-terceros" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-globe text-purple-400"></i> Catálogo de Videojuegos (API de Terceros)
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Datos consumidos en tiempo real vía <code class="text-purple-300">fetch()</code> desde FreeToGame API[cite: 2].</p>
+                </div>
+                <button onclick="cargarJuegosExternos()" class="self-start sm:self-auto bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Recargar API
+                </button>
+            </div>
+            
+            <!-- Contenedor donde se insertan las tarjetas de la API desde js/api-terceros.js -->
+            <div id="api-terceros-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Se llena dinámicamente con JS -->
+            </div>
+        </section>
+
+        <!-- COMMIT 3: SECCIÓN DE WEB SERVICE PROPIO (CRUD DE BIBLIOTECA) -->
+        <section id="modulo-crud" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-server text-indigo-400"></i> Biblioteca Personal de Juegos (Web Service Propio)
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Gestor local para Crear, Leer y Eliminar registros de videojuegos con persistencia en <code class="text-indigo-300">localStorage</code>.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Formulario de Registro (CREATE) -->
+                <form id="form-juego" onsubmit="agregarJuego(event)" class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-4">
+                    <h4 class="text-sm font-bold text-indigo-400 border-b border-slate-800 pb-2">Registrar Nuevo Juego</h4>
+                    
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Nombre del Juego</label>
+                        <input type="text" id="input-titulo" placeholder="Ej. Resident Evil 4" required 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Plataforma</label>
+                        <input type="text" id="input-plataforma" placeholder="Ej. Xbox Series S / PC" required 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Estado de Juego</label>
+                        <select id="input-estado" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                            <option value="Jugando">Jugando</option>
+                            <option value="Completado">Completado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2.5 rounded-lg transition border border-indigo-400/30">
+                        <i class="fa-solid fa-plus mr-1"></i> Agregar a mi Biblioteca
+                    </button>
+                </form>
+
+                <!-- Listado Registrado (READ & DELETE) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h4 class="text-sm font-bold text-slate-300">Mis Juegos Guardados</h4>
+                    <div id="crud-lista" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+                        <!-- Se llena dinámicamente desde js/crud-propio.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMMIT 4: SECCIÓN DE SEGURIDAD Y DEMOSTRACIÓN DE SANITIZACIÓN -->
+        <section id="modulo-seguridad" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+            <div class="border-b border-slate-800 pb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-shield-virus text-emerald-400"></i> Mecanismos de Seguridad & Prevención XSS
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Demostración práctica de filtrado de scripts maliciosos al momento de guardar títulos[cite: 2].</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-2">
+                    <strong class="text-emerald-400 block font-mono"><i class="fa-solid fa-lock mr-1"></i> Sanitización HTML en Entradas</strong>
+                    <p class="text-slate-300">Todos los datos introducidos en el formulario son procesados mediante la función <code class="text-indigo-300">sanitizarHTML()</code> convirtiendo caracteres especiales como <code class="text-amber-400">&lt;script&gt;</code> en texto plano inofensivo antes de renderizarse.</p>
+                </div>
+
+                <div class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-2">
+                    <strong class="text-indigo-400 block font-mono"><i class="fa-solid fa-user-shield mr-1"></i> Autenticación por Rol y Token</strong>
+                    <p class="text-slate-300">Se valida la sesión en el navegador mediante <code class="text-indigo-300">localStorage</code>. Presiona el botón <strong>Acceso Admin</strong> en la barra superior para alternar de rol mediante clave segura.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap de Commits y Clases (Original conservado) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-indigo-400"></i> Plan de Trabajo Incremental por Clases (Commits)
+            </h3>
+            
+            <div class="space-y-3 font-mono text-xs">
+                <div class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-emerald-500/30 text-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Commit 1</span>
+                        <span>Diseño de Interfaz Base (index.html) y estructura temática</span>
+                    </div>
+                    <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> En Repositorio</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-emerald-500/30 text-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Commit 2</span>
+                        <span>Integración de API de Terceros (Catálogo de juegos con fetch())</span>
+                    </div>
+                    <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> Completado</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-emerald-500/30 text-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Commit 3</span>
+                        <span>Lógica del Web Service Propio (Gestor CRUD de biblioteca personal)</span>
+                    </div>
+                    <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> Completado</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-emerald-500/30 text-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Commit 4</span>
+                        <span>Módulo de Seguridad (Sanitización XSS, Tokens) y Reporte PDF final</span>
+                    </div>
+                    <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> Completado</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 flex justify-between items-center flex-col sm:flex-row gap-2">
+            <span>Saber Hacer Unidad 3 | Desarrollo Web Integrado</span>
+            <span class="font-mono text-indigo-400/80">Estructura limpia para Git & Classroom</span>
+        </div>
+    </footer>
+
+    <!-- Cargamos los scripts independientes de la carpeta js/ -->
+    <script src="js/seguridad.js"></script>
+    <script src="js/crud-propio.js"></script>
+    <script src="js/api-terceros.js"></script>
+
+    <!-- Inicialización al cargar la página -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar datos guardados del CRUD y llamar a la API externa
+            if (typeof renderizarCRUD === 'function') renderizarCRUD();
+            if (typeof cargarJuegosExternos === 'function') cargarJuegosExternos();
+            
+            // Actualizar etiqueta de sesión según el rol almacenado
+            const rolActual = localStorage.getItem('userRole') || 'Gamer_Guest';
+            const lblSesion = document.getElementById('lbl-sesion');
+            if (lblSesion) lblSesion.innerText = rolActual;
+        });
+    </script>
 </body>
 </html>
