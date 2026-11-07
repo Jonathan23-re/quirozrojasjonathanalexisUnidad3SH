@@ -35,8 +35,9 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span>Sesión: <strong id="lbl-sesion" class="text-indigo-400">Gamer_Guest</strong></span>
                 </span>
-                <button onclick="verificarAccesoAdmin()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition border border-indigo-400/30 shadow-lg shadow-indigo-600/20">
-                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Acceso Admin
+                <!-- Botón que activa el Modal de Login / Registro -->
+                <button onclick="manejarBotonAuth()" id="btn-auth" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition border border-indigo-400/30 shadow-lg shadow-indigo-600/20 flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-to-bracket" id="icon-auth"></i> <span id="text-auth">Iniciar Sesión</span>
                 </button>
             </div>
         </div>
@@ -83,7 +84,7 @@
             </div>
         </section>
 
-        <!-- Tarjetas de Métricas del Sistema -->
+        <!-- Tarjetas de Métricas -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl card-hover shadow-lg">
                 <div class="flex items-center justify-between mb-3">
@@ -91,7 +92,7 @@
                     <div class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg"><i class="fa-solid fa-database"></i></div>
                 </div>
                 <p class="text-lg font-bold text-white">Biblioteca CRUD</p>
-                <p class="text-xs text-slate-400 mt-1">Gestión interna de catálogo personal.</p>
+                <p class="text-xs text-slate-400 mt-1">Gestión interna de catálogo.</p>
                 <div class="mt-3 flex items-center text-[11px] text-emerald-400 font-mono">
                     <i class="fa-solid fa-circle-check mr-1"></i> Servicio Activo
                 </div>
@@ -134,7 +135,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE API DE TERCEROS -->
+        <!-- MÓDULO API TERCEROS -->
         <section id="modulo-terceros" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
                 <div>
@@ -148,84 +149,102 @@
                 </button>
             </div>
             
-            <div id="api-terceros-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Contenido dinámico desde JS -->
-            </div>
+            <div id="api-terceros-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </section>
 
-        <!-- SECCIÓN DE WEB SERVICE PROPIO (CRUD) -->
+        <!-- MÓDULO CRUD PROPIO -->
         <section id="modulo-crud" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
             <div class="border-b border-slate-800 pb-4">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-server text-indigo-400"></i> Gestor de Biblioteca Personal
                 </h3>
-                <p class="text-xs text-slate-400 mt-0.5">Módulo CRUD para altas, consultas y bajas de videojuegos en almacenamiento local.</p>
+                <p class="text-xs text-slate-400 mt-0.5">Módulo CRUD para altas, consultas y bajas de videojuegos.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Formulario -->
                 <form id="form-juego" onsubmit="agregarJuego(event)" class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-4">
                     <h4 class="text-sm font-bold text-indigo-400 border-b border-slate-800 pb-2">Registrar Juego</h4>
-                    
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Título del Videojuego</label>
-                        <input type="text" id="input-titulo" placeholder="Ej. Resident Evil 4 Remake" required 
-                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Título</label>
+                        <input type="text" id="input-titulo" placeholder="Ej. Resident Evil 4" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Plataforma</label>
-                        <input type="text" id="input-plataforma" placeholder="Ej. Xbox Series S / PC" required 
-                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <input type="text" id="input-plataforma" placeholder="Ej. Xbox Series S" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Estado de Progreso</label>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Estado</label>
                         <select id="input-estado" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                             <option value="Jugando">Jugando</option>
                             <option value="Completado">Completado</option>
                             <option value="Pendiente">Pendiente</option>
                         </select>
                     </div>
-
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2.5 rounded-lg transition border border-indigo-400/30">
-                        <i class="fa-solid fa-plus mr-1"></i> Guardar en Biblioteca
-                    </button>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2.5 rounded-lg transition">Guardar</button>
                 </form>
 
-                <!-- Listado -->
                 <div class="lg:col-span-2 space-y-3">
                     <h4 class="text-sm font-bold text-slate-300">Catálogo Almacenado</h4>
-                    <div id="crud-lista" class="space-y-2 max-h-80 overflow-y-auto pr-1">
-                        <!-- Contenido dinámico desde JS -->
-                    </div>
+                    <div id="crud-lista" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN DE SEGURIDAD -->
+        <!-- MÓDULO SEGURIDAD -->
         <section id="modulo-seguridad" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
             <div class="border-b border-slate-800 pb-4">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-shield-virus text-emerald-400"></i> Módulo de Seguridad y Sanitización
+                    <i class="fa-solid fa-shield-virus text-emerald-400"></i> Seguridad & Sanitización XSS
                 </h3>
-                <p class="text-xs text-slate-400 mt-0.5">Control de inyección de código y validación de usuarios.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-2">
-                    <strong class="text-emerald-400 block font-mono"><i class="fa-solid fa-lock mr-1"></i> Limpieza de Entradas (Anti-XSS)</strong>
-                    <p class="text-slate-300">Todas las entradas de texto del formulario son procesadas mediante sustitución de caracteres especiales, evitando la ejecución involuntaria de scripts maliciosos HTML/JS.</p>
-                </div>
-
-                <div class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-2">
-                    <strong class="text-indigo-400 block font-mono"><i class="fa-solid fa-user-shield mr-1"></i> Control de Acceso basado en Roles</strong>
-                    <p class="text-slate-300">Gestión de privilegios mediante tokens persistentes localmente. Los permisos cambian dinámicamente según la sesión autenticada.</p>
-                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Control de entradas y autenticación segura con base de datos.</p>
             </div>
         </section>
 
     </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL DE INICIO DE SESIÓN / CREAR CUENTA   -->
+    <!-- ========================================== -->
+    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-6">
+            <!-- Botón Cerrar Modal -->
+            <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Pestañas (Tabs) -->
+            <div class="flex border-b border-slate-800">
+                <button onclick="cambiarTab('login')" id="tab-login-btn" class="flex-1 pb-3 text-sm font-bold text-indigo-400 border-b-2 border-indigo-500">Iniciar Sesión</button>
+                <button onclick="cambiarTab('register')" id="tab-register-btn" class="flex-1 pb-3 text-sm font-bold text-slate-400 border-b-2 border-transparent">Crear Cuenta</button>
+            </div>
+
+            <!-- Formulario de Inicio de Sesión -->
+            <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Usuario</label>
+                    <input type="text" id="login-user" required placeholder="Ingresa tu usuario" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Contraseña</label>
+                    <input type="password" id="login-pass" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2.5 rounded-lg transition">Ingresar</button>
+            </form>
+
+            <!-- Formulario de Crear Cuenta (Oculto inicialmente) -->
+            <form id="form-register" onsubmit="ejecutarRegistro(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Nuevo Usuario</label>
+                    <input type="text" id="reg-user" required placeholder="Elige un nombre de usuario" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Contraseña</label>
+                    <input type="password" id="reg-pass" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs py-2.5 rounded-lg transition">Registrarse</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-auto">
@@ -245,9 +264,22 @@
             if (typeof renderizarCRUD === 'function') renderizarCRUD();
             if (typeof cargarJuegosExternos === 'function') cargarJuegosExternos();
             
+            // Actualizar interfaz según sesión activa en localStorage
             const rolActual = localStorage.getItem('userRole') || 'Gamer_Guest';
+            const usuarioGuardado = localStorage.getItem('username');
             const lblSesion = document.getElementById('lbl-sesion');
-            if (lblSesion) lblSesion.innerText = rolActual;
+            const textAuth = document.getElementById('text-auth');
+            const iconAuth = document.getElementById('icon-auth');
+
+            if (lblSesion) lblSesion.innerText = usuarioGuardado ? `${usuarioGuardado} (${rolActual})` : rolActual;
+
+            if (rolActual !== 'Gamer_Guest') {
+                if (textAuth) textAuth.innerText = "Cerrar Sesión";
+                if (iconAuth) iconAuth.className = "fa-solid fa-right-from-bracket";
+            } else {
+                if (textAuth) textAuth.innerText = "Iniciar Sesión";
+                if (iconAuth) iconAuth.className = "fa-solid fa-right-to-bracket";
+            }
         });
     </script>
 </body>
